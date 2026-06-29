@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" stylesheets="@../../../resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainSceneController">
+	<children>
+		<Button fx:id="buttonManageClients" layoutX="45.0" layoutY="124.0" mnemonicParsing="false" onAction="#switchToManageClientstScene" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Client Management">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<Button fx:id="buttonManageAppointments" layoutX="45.0" layoutY="263.0" mnemonicParsing="false" onAction="#switchToManageAppointments" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Appointment Management">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<Button fx:id="buttonChat" layoutX="45.0" layoutY="398.0" mnemonicParsing="false" onAction="#switchToChatScene" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Chat">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<Button fx:id="buttonManageParts" layoutX="416.0" layoutY="124.0" mnemonicParsing="false" onAction="#switchToManageParts" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Parts Management">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<Button fx:id="buttonSupplierOrder" layoutX="416.0" layoutY="261.0" mnemonicParsing="false" onAction="#openSupplierDialog" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Orders">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<Button fx:id="buttonInvoice" layoutX="416.0" layoutY="398.0" mnemonicParsing="false" onAction="#switchToInvoices" prefHeight="90.0" prefWidth="335.0" styleClass="custom-button" text="Create Invoice">
+			<font>
+				<Font name="Helvetica Bold" size="16.0" />
+			</font>
+		</Button>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="339.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/calendar-2.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="340.0" layoutY="412.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/comment.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="340.0" layoutY="139.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/clients.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="711.0" layoutY="139.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/parts.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="712.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/order.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="25.0" fitWidth="25.0" layoutX="711.0" layoutY="413.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/invoice.png" />
+			</image>
+		</ImageView>
+		<ImageView fitHeight="40.0" fitWidth="40.0" layoutX="685.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../../../resources/gui_images/account_service.png" />
+			</image>
+		</ImageView>
+      <ImageView fx:id="logoutImage" fitHeight="21.0" fitWidth="21.0" layoutX="736.0" layoutY="31.0" onMouseClicked="#handleLogout" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../resources/gui_images/logout.png" />
+         </image>
+      </ImageView>
+	</children>
+</AnchorPane>

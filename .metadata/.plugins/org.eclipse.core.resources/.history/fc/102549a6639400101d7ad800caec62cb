@@ -1,0 +1,18 @@
+package org.unibl.etf.supplier.repository;
+
+import java.util.*;
+import org.unibl.etf.model.*;
+
+public class ItemRepository {
+	private List<Item> items = new ArrayList<>();
+	private static ItemRepository instance = null;
+	
+	private ItemRepository() {
+		super();
+		loadItems();
+	}
+	
+	private static void loadItems() {
+		
+	}
+}

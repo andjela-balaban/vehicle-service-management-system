@@ -1,0 +1,39 @@
+package org.unibl.etf.supplierapp.server;
+
+import org.unibl.etf.model.*;
+
+public class ClientTest {
+    public static void main(String[] args) {
+        try {
+            SupplierClient client = new SupplierClient("supplier1");
+
+            // Test login
+            boolean ok = client.login("supplier1");
+            System.out.println("Login successful: " + ok);
+
+            // Test item list
+            System.out.println("Items: " + client.getItems());
+
+            // Test adding an item
+            Item novi = new Item();
+            novi.setTitle("Oil filter");
+            novi.setPrice(25.0);
+            novi.setCode("1");;
+            boolean dodat = client.addItem(novi);
+            System.out.println("Item added: " + dodat);
+
+            // Order Download Test (MQ)
+            Order o = client.getNextOrder();
+            if (o != null) {
+                System.out.println("Preuzeta narudžba: " + o);
+                boolean approved = client.approveOrder(o.getId());
+                System.out.println("Odobreno: " + approved);
+            } else {
+                System.out.println("Nema narudžbi u redu.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

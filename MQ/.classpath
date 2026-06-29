@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SharedModule">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-19">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/MQ/amqp-client-5.26.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/MQ/slf4j-api-2.0.17.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/MQ/slf4j-simple-2.0.17.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/java-json_mapper/jackson-annotations-2.19.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/java-json_mapper/jackson-core-2.19.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/java-json_mapper/jackson-databind-2.19.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/MQ/logback-classic-1.2.3.jar"/>
+	<classpathentry kind="lib" path="/Users/andjelabalaban/Documents/java/MQ/slf4j-log4j12-1.7.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

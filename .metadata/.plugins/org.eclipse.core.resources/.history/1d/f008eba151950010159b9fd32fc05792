@@ -1,0 +1,70 @@
+package org.unibl.etf.supplier.server;
+
+import org.unibl.etf.model.Supplier;
+import org.unibl.etf.properties.ConfigManager;
+import org.unibl.etf.supplier.service.*;
+import java.io.*;
+
+public class SupplierServer {
+	private static String KEY_STORE_PATH = ConfigManager.KEY_STORE_PATH;
+	private static String KEY_STORE_PASSWORD = ConfigManager.KEY_STORE_PASSWORD;
+
+	private static Supplier supplier;
+	private static String host;
+	private static int port;
+	
+	public SupplierServer(String name) {
+		loadProperties(name);
+	}
+	
+	private static void loadProperties(String name) {
+		SupplierService service = new SupplierService();
+		supplier = service.findByName(name);
+		if(supplier != null) {
+			port = supplier.getPort();
+			host = supplier.getHost();
+		}
+	}
+	
+	public void start() {
+		
+        if (supplier == null) {
+            System.out.println("Dobavljač nije pronađen.");
+            return;
+        }
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Dobavljač '" + supplier.getName() + "' pokrenut na portu " + port);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Povezan servis sa: " + clientSocket.getInetAddress());
+
+                // novi thread za komunikaciju sa servisom
+                new Thread(() -> handleClient(clientSocket)).start();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleClient(Socket clientSocket) {
+        try (
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+        ) {
+            String request;
+            while ((request = in.readLine()) != null) {
+                System.out.println("Primljeno od servisa: " + request);
+
+                // TODO: ovdje ćeš kasnije dodati logiku za narudžbe, artikle, itd.
+                out.println("Dobavljač '" + supplier.getName() + "' je primio: " + request);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+}

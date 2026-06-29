@@ -1,0 +1,18 @@
+/**
+ * 
+ */
+/**
+ * @author andjelabalaban
+ *
+ */
+module SupplierServer {
+	requires static SharedModule;
+	requires MQ;
+	requires static AccountingServerRMI;
+	requires org.jsoup;
+	requires java.rmi;
+	
+	exports org.unibl.etf.supplier.server;
+	exports org.unibl.etf.supplier.service;
+	exports org.unibl.etf.supplier.repository;
+}

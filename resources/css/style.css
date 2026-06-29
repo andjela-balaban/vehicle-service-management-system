@@ -1,0 +1,66 @@
+.custom-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #c1c1c1;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #2a2a2a;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* hover */
+.custom-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #77D0A0;
+}
+
+/* pressed */
+.custom-button:pressed {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #77D0A0;
+    -fx-text-fill: black;
+}
+
+.continue-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #66b389;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #2a2a2a;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* hover */
+.back-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #77D0A0;
+}
+
+/* pressed */
+.back-button:pressed {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #77D0A0;
+    -fx-text-fill: black;
+}
+
+#confirmButton:hover {
+    -fx-background-color: #77D0A0;
+    -fx-text-fill: white;
+}
+
+#sendButton:hover {
+    -fx-background-color: #77D0A0;
+    -fx-text-fill: white;
+}

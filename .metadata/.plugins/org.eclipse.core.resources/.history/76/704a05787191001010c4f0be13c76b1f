@@ -1,0 +1,14 @@
+package org.unibl.etf.service;
+
+import java.util.List;
+
+import org.unibl.etf.model.*;
+import org.unibl.etf.repository.*;
+
+public class AppointmentService {
+	private final AppointmentRepository clientRepository = AppointmentRepository.getInstance();
+
+    public List<Appointment> getAllAppointments() {
+        return findAll();
+    }
+}	

@@ -1,0 +1,14 @@
+package org.unibl.etf.supplier.server;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.unibl.etf.model.Item;
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class Main {
+	public static void main(String[] args) throws MalformedURLException, IOException {
+		Item item = ItemScraper.scrape(new URL("https://www.silux.ba/proizvodi/karoserija/amortizeri-haube/179332/amortizer-haube-straga-bmw-e36-90-00-293x80?refurl=%2Fproizvodi%2Fkaroserija%2Famortizeri-haube"));
+		System.out.println(item);
+	}
+}

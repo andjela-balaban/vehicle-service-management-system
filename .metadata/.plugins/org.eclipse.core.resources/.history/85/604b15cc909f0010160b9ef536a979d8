@@ -1,0 +1,132 @@
+package application;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import org.unibl.etf.dto.PartUsage;
+import org.unibl.etf.model.Appointment;
+import org.unibl.etf.model.Invoice;
+import org.unibl.etf.model.Client;
+import org.unibl.etf.service.rest.AppintmentRESTController;
+import org.unibl.etf.service.rest.InvoiceRESTController;
+import org.unibl.etf.service.rest.ClientRESTController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+public class InvoiceSceneController {
+    @FXML
+    private Button back, sendButton, cancelButton, addPartButton;
+    @FXML
+    private ChoiceBox<Client> clientChoiceBox;
+    @FXML
+    private ChoiceBox<Appointment> appointmentChoiceBox;
+    @FXML
+    private ListView<PartUsage> partsListView;
+
+    private ObservableList<PartUsage> partsObservableList = FXCollections.observableArrayList();
+
+    
+    @FXML
+    private void switchToMainScene() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMain.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) back.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Main screen");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+        }
+    }
+    
+    @FXML
+    private void initialize() {
+        partsListView.setItems(partsObservableList);
+
+        List<Client> clients = ClientRESTController.getAllClients();
+        if (clients != null) {
+            clientChoiceBox.setItems(FXCollections.observableArrayList(clients));
+        }
+
+        clientChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+            if (newV != null) {
+                List<Appointment> appointments = AppintmentRESTController.getAllClientAppointments(newV.getId());
+                if (appointments != null) {
+                    appointmentChoiceBox.setItems(FXCollections.observableArrayList(appointments));
+                }
+            }
+        });
+
+        addPartButton.setOnAction(e -> openPartDialog());   
+        sendButton.setOnAction(e -> sendInvoice());
+    }
+   
+
+    private void openPartDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneInvoicePartDialog.fxml"));
+            Parent root = loader.load();
+
+            InvoicePartSceneDialog controller = loader.getController();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Adding a part");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(addPartButton.getScene().getWindow());
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+            // After closing the dialog, we take the selected part and quantity
+            PartUsage usage = controller.getPartUsage();
+            if (usage != null) {
+                partsObservableList.add(usage);
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", ex);
+        }
+    }
+
+    
+    private void sendInvoice() {
+        Client client = clientChoiceBox.getValue();
+        Appointment appointment = appointmentChoiceBox.getValue();
+
+        if (client == null || appointment == null || partsObservableList.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "You must select a client, an appointment and at least one part.").showAndWait();
+            return;
+        }
+
+        Invoice invoice = new Invoice(client, appointment, new ArrayList<>(partsObservableList));
+        InvoiceRESTController rest = new InvoiceRESTController();
+        Invoice createdInvoice = rest.createInvoice(invoice);
+
+        if (createdInvoice == null) {
+            new Alert(Alert.AlertType.ERROR, "Invoice creation failed.").showAndWait();
+            return;
+        }
+        Invoice sentInvoice = rest.sendInvoice(client.getId(), createdInvoice);
+
+        if (sentInvoice != null) {
+            new Alert(Alert.AlertType.INFORMATION, "Faktura uspješno poslana!").showAndWait();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Slanje fakture nije uspjelo.").showAndWait();
+        }
+    }
+    
+}

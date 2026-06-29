@@ -1,0 +1,45 @@
+package application;
+
+import org.unibl.etf.client.rest.LoginRESTController;
+import org.unibl.etf.session.UserSession;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+
+public class LoginSceneController {
+	@FXML
+    private TextField supplierNameField;
+	
+	private void loginHandler() {
+        String supplierName = supplierNameField.getText();
+
+        if (supplierName.isEmpty()) {
+            showAlert("Greška", "Molimo unesite ime dobavljača");
+            return;
+        }
+
+        try {
+        	boolean approved = SupplierClient.login(supplierName);
+        	if (client != null) {
+            	// Korisnik uspijesno ulogovan -> moze da udje u aplikaciju i dodajemo njegove podatke u UserSession
+        		UserSession.init(client.getId(), client.getUsername());
+            	switchToMainScene();
+            } else {
+                showAlert("Neuspješna prijava", "Pogrešno korisničko ime ili lozinka.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Greška", "Došlo je do problema sa serverom.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}

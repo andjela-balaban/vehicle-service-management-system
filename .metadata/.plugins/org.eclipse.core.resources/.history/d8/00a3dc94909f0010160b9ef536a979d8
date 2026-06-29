@@ -1,0 +1,67 @@
+package application;
+
+import java.util.List;
+import org.unibl.etf.dto.PartUsage;
+import org.unibl.etf.model.*;
+import org.unibl.etf.service.rest.PartRESTController;
+import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+
+
+public class InvoicePartSceneDialog {
+
+    @FXML
+    private ChoiceBox<VehiclePart> partChoiceBox;
+    @FXML
+    private TextField quntityField;
+    @FXML
+    private Button confirmButton, cancelButton;
+
+    private PartUsage selectedUsage;
+
+    @FXML
+    private void initialize() {
+        List<VehiclePart> parts = PartRESTController.getAllParts(); // Parts sourcing
+        if (parts != null) {
+            partChoiceBox.setItems(FXCollections.observableArrayList(parts));
+        }
+
+        confirmButton.setOnAction(e -> confirm());
+        cancelButton.setOnAction(e -> cancel());
+    }
+
+    private void confirm() {
+        VehiclePart part = partChoiceBox.getValue();
+        if (part == null) {
+            new Alert(Alert.AlertType.WARNING, "Odaberite dio.").showAndWait();
+            return;
+        }
+
+        try {
+            int quantity = Integer.parseInt(quntityField.getText());
+            selectedUsage = new PartUsage(part, quantity);
+            close();
+        } catch (NumberFormatException ex) {
+            new Alert(Alert.AlertType.ERROR, "Neispravan unos količine.").showAndWait();
+        }
+    }
+
+    private void cancel() {
+        selectedUsage = null;
+        close();
+    }
+
+    private void close() {
+        Stage stage = (Stage) confirmButton.getScene().getWindow();
+        stage.close();
+    }
+
+    public PartUsage getPartUsage() {
+        return selectedUsage;
+    }
+}

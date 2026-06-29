@@ -1,0 +1,49 @@
+package org.unibl.etf.supplier.repository;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import org.unibl.etf.model.*;
+import org.unibl.etf.properties.ConfigManager;
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class ItemRepository {
+	private static List<Item> items = new ArrayList<>();
+	private static ItemRepository instance = null;
+	private static String LINKS_PATH = ConfigManager.LINKS_PATH;
+	
+	private ItemRepository() {
+		super();
+		loadItems();
+	}
+	
+	//TODO - ucitavanje artikala pomocu parsera
+	private static void loadItems() {
+		try(BufferedReader in = new BufferedReader(new FileReader(LINKS_PATH))){
+			 String line;
+			 while((line = in.readLine()) != null) {
+				 try {
+					 Item item = ItemScraper.scrape(new URL(line));
+					items.add(item);
+					System.out.println("U listu dodat: " + item);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			 }
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ItemRepository getInstance() {
+		 if(instance == null) 
+			 instance = new ItemRepository();
+		 return instance; 
+	}
+	
+	public List<Item> getItems(){
+		return items;
+	}
+}

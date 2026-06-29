@@ -1,0 +1,138 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.application.Platform;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.IOException;
+import java.util.logging.Level;
+
+import org.unibl.etf.chat.client.ChatClient;
+import org.unibl.etf.client.chat.UserRegistry;
+import org.unibl.etf.dto.ChatMessage;
+import org.unibl.etf.dto.MessageListener;
+import org.unibl.etf.dto.MessageType;
+import org.unibl.etf.session.UserSession;
+
+public class ChatSceneController {
+
+    @FXML 
+    private ListView<String> usersListView;
+    @FXML 
+    private ListView<String> groupsListView;
+    @FXML 
+    private ListView<String> chatMessagesListView;
+    @FXML 
+    private TextField messageField;
+    @FXML 
+    private Button sendButton;
+    @FXML
+	private Button back;
+	
+    private ChatClient chatClient;
+    private UserRegistry userRegistry;
+	
+    
+	@FXML
+    private void switchToMainScene() {
+        try {
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMain.fxml"));
+        	Parent root = loader.load();
+        	Stage stage = (Stage) back.getScene().getWindow();
+        	
+        	Scene scene = new Scene(root);
+        	stage.setScene(scene);
+        	stage.setTitle("Main screen");
+        	stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+        }
+    }
+
+	
+	public void initialize() {
+	    userRegistry = UserRegistry.getInstance();  
+
+	    // Popunjavanje ListView-a
+	    usersListView.getItems().clear();
+	    usersListView.getItems().addAll(userRegistry.getAllUsernames());
+
+	    // Popuniavanje grupe
+	    groupsListView.getItems().addAll("Dijelovi i tako to");
+
+	    // Chat client
+	    chatClient = new ChatClient();
+	    try {
+	        chatClient.setMessageListener(new MessageListener() {
+	            @Override
+	            public void onMessage(ChatMessage msg) {
+	                Platform.runLater(() -> chatMessagesListView.getItems().add(
+	                    "[Od " + userRegistry.getUsername(msg.getSenderId()) + "] " + msg.getContent()));
+	            }
+
+	            @Override
+	            public void onMulticast(String msg) {
+	                String[] parts = msg.split("#");
+	                if (parts.length == 3) {
+	                    String username = parts[0];
+	                    String groupName = parts[1];
+	                    String message = parts[2];
+	                    Platform.runLater(() -> chatMessagesListView.getItems().add(
+	                        "[" + username + " -> " + groupName + "] " + message));
+	                }
+	            }
+	        });
+
+	        chatClient.connect(UserSession.getInstance().getClientId());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        logger.log(Level.WARNING, "Exception: ", e);
+	    }
+	}
+
+	
+	@FXML
+	private void handleSend() {
+	    String text = messageField.getText();
+	    String receiverUsername = usersListView.getSelectionModel().getSelectedItem();
+	    String group = groupsListView.getSelectionModel().getSelectedItem();
+
+	    if (text.isEmpty()) return;
+
+	    try {
+	        ChatMessage msg = new ChatMessage();
+	        msg.setSenderId(UserSession.getInstance().getClientId());
+	        msg.setContent(text);
+
+	        if (receiverUsername != null) {
+	            int receiverId = userRegistry.getId(receiverUsername);
+	            msg.setReceiverId(String.valueOf(receiverId));
+	            msg.setType(MessageType.UNICAST);
+	            chatClient.sendMessage(msg);
+	            chatMessagesListView.getItems().add("[Ja -> " + receiverUsername + "] " + text);
+
+	        } else if (group != null) {
+	            msg.setReceiverId(group);
+	            msg.setType(MessageType.MULTICAST);
+	            chatClient.sendMessage(msg);
+	            chatMessagesListView.getItems().add("[Ja -> " + group + "] " + text);
+	        } else {
+	            chatMessagesListView.getItems().add("[Sistem] Odaberi korisnika ili grupu.");
+	        }
+
+	        messageField.clear();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	
+}
+

@@ -1,0 +1,73 @@
+package application;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.IOException;
+import java.util.logging.Level;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+public class MainSceneController {
+
+	@FXML
+	private Button buttonMakeAppointment;
+	@FXML
+	private Button buttonAppointmentsHistory;
+	@FXML
+	private Button buttonChat;
+	
+	
+	@FXML
+    private void switchToMakeAppointmetScene() {
+        try {
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMakeAppintment.fxml"));
+        	Parent root = loader.load();
+        	Stage stage = (Stage) buttonMakeAppointment.getScene().getWindow();
+        	
+        	Scene scene = new Scene(root);
+        	stage.setScene(scene);
+        	stage.setTitle("Zakazivanje termina");
+        	stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+        }
+    }
+	
+	@FXML
+    private void switchToAppointmetsHistoryScene() {
+        try {
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneAppointmetsHistory.fxml"));
+        	Parent root = loader.load();
+        	Stage stage = (Stage) buttonAppointmentsHistory.getScene().getWindow();
+        	
+        	Scene scene = new Scene(root);
+        	stage.setScene(scene);
+        	stage.setTitle("Pregled istorije termina");
+        	stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	@FXML
+    private void switchToChatScene() {
+        try {        	
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneChat.fxml"));
+        	Parent root = loader.load();
+        	Stage stage = (Stage) buttonChat.getScene().getWindow();
+        	
+        	Scene scene = new Scene(root);
+        	stage.setScene(scene);
+        	stage.setTitle("Chat");
+        	stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

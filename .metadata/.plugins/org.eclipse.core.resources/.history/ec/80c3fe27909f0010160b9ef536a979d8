@@ -1,0 +1,71 @@
+package application;
+
+import org.unibl.etf.model.Item;
+import org.unibl.etf.service.rest.SupplierRESTController;
+import org.unibl.etf.model.*;
+import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+
+public class CreateOrderDialogController {
+    @FXML 
+    private TextField quantityField;
+    @FXML 
+    private Button orderButton;
+    @FXML 
+    private Button cancelButton;
+
+    private int orderId; 
+    private Supplier supplier;
+    private Item item;
+
+    public void setItem(Supplier supplier, Item item) {
+        this.supplier = supplier;
+        this.item = item;
+    }
+
+    @FXML
+    private void initialize() {
+        orderButton.setOnAction(e -> placeOrder());
+    }
+
+    private void placeOrder() {
+        try {
+            int qty = Integer.parseInt(quantityField.getText());
+            if (qty <= 0) {
+                showError("The quantity must be greater than 0");
+                return;
+            }
+            // Slanje narudzbe
+            orderId = SupplierRESTController.sendOrder(supplier.getName(), qty, item);
+            
+            if(orderId != -1)
+            	showInfo("Narudžba uspješno kreirana i čeka obradu");
+            else
+            	showError("Nije moguće poslati narudžbu");
+            
+            closeDialog();
+        } catch (NumberFormatException ex) {
+            showError("Unesite validan broj za količinu");
+        }
+    }
+
+    private void closeDialog() {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
+    }
+
+    private void showError(String msg) {
+        new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+    }
+
+    private void showInfo(String msg) {
+        new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
+    }
+    
+    public int orderId() {
+    	return orderId;
+    }
+}

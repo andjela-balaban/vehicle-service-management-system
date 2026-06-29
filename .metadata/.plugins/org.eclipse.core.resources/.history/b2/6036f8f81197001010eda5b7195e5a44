@@ -1,0 +1,15 @@
+/**
+ * 
+ */
+/**
+ * @author andjelabalaban
+ *
+ */
+module SupplierServer {
+	requires SharedModule;
+	requires MQ;
+	
+	exports org.unibl.etf.supplier.server;
+	exports org.unibl.etf.supplier.service;
+	exports org.unibl.etf.supplier.repository;
+}

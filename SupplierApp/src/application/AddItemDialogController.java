@@ -1,0 +1,94 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import java.net.MalformedURLException;
+import java.net.URL;
+import static org.unibl.etf.logger.MyLogger.logger;
+import java.util.logging.Level;
+import org.unibl.etf.model.Item;
+import org.unibl.etf.supplierapp.server.SupplierClient;
+
+public class AddItemDialogController {
+
+    @FXML
+    private TextField codeField;
+    @FXML
+    private TextField titleField;
+    @FXML
+    private TextField imageURLField;
+    @FXML
+    private TextField priceField;
+    @FXML
+    private Button confirmButton;
+    @FXML
+    private Button cancelButton;
+
+    private SupplierClient client;
+    private ItemsSceneController parentController;
+
+    public void setClientAndParent(SupplierClient client, ItemsSceneController parent) {
+        this.client = client;
+        this.parentController = parent;
+    }
+
+    @FXML
+    private void initialize() {
+        confirmButton.setOnAction(e -> addItem());
+        cancelButton.setOnAction(e -> ((Stage) cancelButton.getScene().getWindow()).close());
+    }
+
+    private void addItem() {
+        String code = codeField.getText().trim();
+        String title = titleField.getText().trim();
+        String img = imageURLField.getText().trim();
+        String priceStr = priceField.getText().trim();
+
+        if (code.isEmpty() || title.isEmpty() || priceStr.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Warning", "Fill in the required fields.");
+            return;
+        }
+
+        double price;
+        try {
+            price = Double.parseDouble(priceStr);
+        } catch (NumberFormatException ex) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Price must be a number.");
+            return;
+        }
+
+        Item item = null;
+		try {
+			item = new Item(code, title, price, (img.isEmpty() ? null : (new URL(img))));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+
+        try {
+            boolean added = client.addItem(item);
+            if (added) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Item added.");
+                parentController.loadSupplierItems(); // osvjezi tabelu
+                ((Stage) confirmButton.getScene().getWindow()).close();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Item not added.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", ex);
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to connect to the server.");
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String msg) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+}

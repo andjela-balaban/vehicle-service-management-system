@@ -1,0 +1,46 @@
+package org.unibl.etf.accounting.rmi;
+
+import java.io.*;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import static org.unibl.etf.logger.MyLogger.logger;
+import org.unibl.etf.model.Receipt;
+import org.unibl.etf.properties.ConfigManager;
+
+public class AccountingServer implements AccountingInterface {
+	
+	private static String RECEIPTS_PATH = ConfigManager.RECEIPTS_PATH;
+	
+	public AccountingServer() {
+		super();
+	}
+
+	@Override
+	public void serializeReceipt(Receipt receipt) throws RemoteException {
+		String fileName = "receipt" + receipt.getId() + ".ser";
+		
+		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(RECEIPTS_PATH + File.separator + fileName))){
+			oos.writeObject(receipt);
+	        System.out.println("Receipt saved to: " + fileName);
+		} catch(IOException e) {
+			throw new RemoteException("Error while serializing receipt", e);
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+	}
+	
+	public static void main(String[] args) {
+		try {
+			AccountingServer server = new AccountingServer();
+			AccountingInterface stub = (AccountingInterface) UnicastRemoteObject.exportObject(server, 0);
+			Registry registry = LocateRegistry.createRegistry(1099);
+			registry.rebind(ConfigManager.ACCOUNTING_RMI, stub);
+			System.out.println("Accounting server started...");
+		}catch(Exception e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+	}
+}

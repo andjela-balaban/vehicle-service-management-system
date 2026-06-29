@@ -1,0 +1,99 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.IOException;
+import java.util.logging.Level;
+
+import javafx.scene.Parent;
+import org.unibl.etf.client.rest.*;
+import org.unibl.etf.session.UserSession;
+
+public class LoginController {
+
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private Hyperlink registerLink;
+
+
+    @FXML
+    private void switchToRegistrationScene() {
+        try {
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneRegistration.fxml"));
+        	Parent root = loader.load();
+        	Stage stage = (Stage) registerLink.getScene().getWindow();
+        	
+        	Scene scene = new Scene(root);
+        	stage.setScene(scene);
+        	stage.setTitle("Registration");
+        	stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+        }
+    } 
+    
+    private void switchToMainScene() {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMain.fxml"));
+    	Parent root;
+		try {
+			root = loader.load();
+			Stage stage = (Stage) registerLink.getScene().getWindow();
+	    	Scene scene = new Scene(root);
+	    	stage.setScene(scene);
+	    	stage.setTitle("Main screen");
+	    	stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+    }
+
+    @FXML
+    private void loginHandler() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            showAlert("Error", "Please enter username and password.");
+            return;
+        }
+
+        try {
+        	org.unibl.etf.model.Client client = LoginRESTController.authenticateLoginRequest(username, password);
+        	if (client != null) {
+            	// Korisnik uspijesno ulogovan -> moze da udje u aplikaciju i dodajemo njegove podatke u UserSession
+        		UserSession.init(client.getId(), client.getUsername());
+            	switchToMainScene();
+            } else {
+                showAlert("Neuspješna prijava", "Pogrešno korisničko ime ili lozinka.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+            showAlert("Greška", "Došlo je do problema sa serverom.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
+

@@ -1,0 +1,14 @@
+package org.unibl.etf.supplier.server;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.unibl.etf.model.Item;
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class Main {
+	public static void main(String[] args) throws MalformedURLException, IOException {
+		Item item = ItemScraper.scrape(new URL("https://www.silux.ba/proizvodi/motor/nosaci/4054958/nosac-motora-s2281084-toyota-previa-00-05?refurl=%2Fproizvodi%2Fmotor%2Fnosaci"));
+		System.out.println(item);
+	}
+}

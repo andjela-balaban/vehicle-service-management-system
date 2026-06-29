@@ -1,0 +1,22 @@
+package org.unibl.etf.supplier.server;
+
+import java.io.IOException;
+
+public class SupplierServerTest {
+    public static void main(String[] args) {
+        try {
+            SupplierServer server = new SupplierServer("supplier1");
+            new Thread(() -> {
+                try {
+                    server.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+            System.out.println("SupplierServer pokrenut za test.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

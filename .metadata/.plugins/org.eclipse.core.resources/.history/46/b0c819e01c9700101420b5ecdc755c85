@@ -1,0 +1,15 @@
+package org.unibl.etf.supplier.server;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.unibl.etf.model.Item;
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class Main {
+	public static void main(String[] args) throws MalformedURLException, IOException {
+		Item item = ItemScraper.scrape(new URL("https://www.pkwteile.de/jurid/7210930"));
+		System.out.println(item);
+	}
+}

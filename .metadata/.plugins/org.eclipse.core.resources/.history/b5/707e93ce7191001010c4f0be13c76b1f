@@ -1,0 +1,40 @@
+package org.unibl.etf.service;
+
+import java.util.List;
+
+import org.unibl.etf.model.*;
+import org.unibl.etf.repository.*;
+
+public class AppointmentService {
+	private final AppointmentRepository appointmentRepository = AppointmentRepository.getInstance();
+
+	
+	
+	private boolean add(Appointment client) {
+        boolean result = appointmentRepository.getClients().add(client);
+        appointmentRepository.save();
+        return result;
+    }
+
+    private boolean delete(String username) {
+    	boolean result = appointmentRepository.getClients().removeIf(c -> c.getUsername().equals(username));
+    	appointmentRepository.save();
+        return result;
+    }
+    
+    public List<Appointment> findAll() {
+        return appointmentRepository.getAppointment();
+    }
+    
+    public Client findById(int id) {
+        return clientRepository.getClients()
+                .stream()
+                .filter(c -> c.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public List<Appointment> getAllAppointments() {
+        return findAll();
+    }
+}	

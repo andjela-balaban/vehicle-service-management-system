@@ -1,0 +1,37 @@
+package org.unibl.etf.chat.test;
+
+import java.util.Scanner;
+import org.unibl.etf.chat.client.*;
+import org.unibl.etf.dto.*;
+
+public class TestClient {
+    public static void main(String[] args) throws Exception {
+        try(Scanner scanner = new Scanner(System.in)){
+        	System.out.print("Enter your client ID: ");
+            int clientId = Integer.parseInt(scanner.nextLine());
+
+            ChatClient client = new ChatClient();
+            client.setMessageListener(new ConsoleMessageListener());
+            client.connect(clientId);
+
+            while (true) {
+                System.out.println("Enter recipient ID or MULTICAST (END to exit):");
+                String receiver = scanner.nextLine();
+                if ("END".equalsIgnoreCase(receiver)) {
+                    client.disconnect();
+                    break;
+                }
+
+                System.out.println("Enter message:");
+                String content = scanner.nextLine();
+
+                MessageType type = receiver.equalsIgnoreCase("MULTICAST") ?
+                        MessageType.MULTICAST : MessageType.UNICAST;
+
+                ChatMessage msg = new ChatMessage(clientId, receiver, content, type);
+                client.sendMessage(msg);
+            }
+        }
+    }
+}
+

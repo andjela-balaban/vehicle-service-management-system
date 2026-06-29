@@ -1,0 +1,10 @@
+package org.unibl.etf.supplier.server;
+
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class Main {
+	public static void main(String[] args) {
+		Item item = ItemScraper.scrape(new URL("https://www.pkwteile.de/ate/16165017"));
+		System.println(item);
+	}
+}

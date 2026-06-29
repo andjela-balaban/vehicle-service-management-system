@@ -1,0 +1,14 @@
+package org.unibl.etf.supplier.server;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.unibl.etf.model.Item;
+import org.unibl.etf.supplier.parser.ItemScraper;
+
+public class Main {
+	public static void main(String[] args) throws MalformedURLException, IOException {
+		Item item = ItemScraper.scrape(new URL("https://www.silux.ba/proizvodi/rasvjeta/farovi/12/far-audi-a3-00?refurl=%2Fproizvodi%2Frasvjeta%2Ffarovi"));
+		System.out.println(item);
+	}
+}

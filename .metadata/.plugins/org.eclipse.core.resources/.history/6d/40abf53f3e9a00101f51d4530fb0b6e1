@@ -1,0 +1,44 @@
+package application;
+
+import java.io.IOException;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+public class OrdersSceneController {
+
+	 @FXML
+	 private TextField orderIdField;
+	 @FXML
+	 private TextField itemField;
+	 @FXML
+	 private TextField quantityField;
+	 @FXML
+	 private Button nextOrderButton;
+	 @FXML
+	 private Button approveButton;
+	 @FXML
+	 private Button rejectButton;
+	 @FXML
+	 private Button back;
+	 
+	 @FXML
+	    private void switchToMainScene() {
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMain.fxml"));
+	            Parent root = loader.load();
+	            Stage stage = (Stage) back.getScene().getWindow(); 
+	            Scene scene = new Scene(root);
+	            stage.setScene(scene);
+	            stage.setTitle("Main screen");
+	            stage.show();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+}

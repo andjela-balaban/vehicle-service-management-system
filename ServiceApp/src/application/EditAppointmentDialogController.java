@@ -1,0 +1,80 @@
+package application;
+
+import org.unibl.etf.model.Appointment;
+import org.unibl.etf.model.AppointmentStatus;
+import org.unibl.etf.service.rest.AppintmentRESTController;
+import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+
+public class EditAppointmentDialogController {
+
+    @FXML 
+    private TextField dateTimeField;
+    @FXML 
+    private TextField serviceTypeField;
+    @FXML 
+    private TextField clientField;
+    @FXML 
+    private TextArea commentArea;
+    @FXML 
+    private ChoiceBox<AppointmentStatus> statusChoiceBox;
+    @FXML 
+    private Button confirmButton;
+    @FXML 
+    private Button cancelButton;
+
+    private Appointment appointment;
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+
+        // filling in the fields
+        dateTimeField.setText(appointment.getDateTimeFormatted());
+        serviceTypeField.setText(appointment.getServiceType().toString());
+        clientField.setText(String.valueOf(appointment.getClinetId())); 
+        commentArea.setText(appointment.getComment());
+
+        // filling in choiceBox with enum values
+        statusChoiceBox.getItems().setAll(AppointmentStatus.values());
+        statusChoiceBox.setValue(appointment.getStatus());
+
+        // disable non-editable fields
+        dateTimeField.setEditable(false);
+        serviceTypeField.setEditable(false);
+        clientField.setEditable(false);
+    }
+
+    @FXML
+    private void initialize() {
+        confirmButton.setOnAction(e -> saveAndClose());
+        cancelButton.setOnAction(e -> closeDialog());
+    }
+
+    private void saveAndClose() {
+        if (appointment != null) {
+            appointment.setComment(commentArea.getText());
+            appointment.setStatus(statusChoiceBox.getValue());
+
+            Appointment updated = AppintmentRESTController.updateAppointment(appointment);
+            if (updated != null) {
+                this.appointment = updated; // update local object
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update failed.").showAndWait();
+                return;
+            }
+        }
+        closeDialog();
+    }
+
+    private void closeDialog() {
+        Stage stage = (Stage) confirmButton.getScene().getWindow();
+        stage.close();
+    }
+    
+    public Appointment getAppointment() {
+        return appointment;
+    }
+}

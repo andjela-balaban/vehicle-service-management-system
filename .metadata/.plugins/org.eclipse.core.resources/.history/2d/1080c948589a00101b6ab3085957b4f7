@@ -1,0 +1,41 @@
+package org.unibl.etf.central.server.service;
+
+import java.util.List;
+import org.unibl.etf.central.server.repository.OrderRequestRepository;
+import org.unibl.etf.dto.OrderRequestDTO;
+import org.unibl.etf.model.Item;
+import org.unibl.etf.model.Supplier;
+
+public class OrderRequestService {
+	private final OrderRequestRepository ordersRepository;
+	
+	public OrderRequestService() {
+		ordersRepository = OrderRequestRepository.getInstance();
+	}
+	
+	public List<OrderRequestDTO> getAllOrders(){
+		return ordersRepository.getOrders();
+	}
+	
+	public OrderRequestDTO getOrderRequest(Supplier supplier, Item item) {
+		return ordersRepository.getOrders().stream()
+				.filter(r -> r.getItem().equals(item) && r.getSupplier().equals(supplier))
+				.findFirst()
+				.orElse(null);
+	}
+	
+	public OrderRequestDTO addOrderRequest(OrderRequestDTO request) {
+		if(ordersRepository.getOrders().add(request)) {
+			return request;
+		}
+		return null;
+	}
+	
+	public boolean deleteOrderRequest(int orderId) {
+		OrderRequestDTO request = ordersRepository.getOrders().stream()
+				.filter(o -> o.getId() == orderId)
+				.findFirst()
+				.orElse(null); 
+		return 
+	}
+}

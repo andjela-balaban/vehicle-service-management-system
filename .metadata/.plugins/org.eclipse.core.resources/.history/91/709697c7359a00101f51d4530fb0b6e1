@@ -1,0 +1,14 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+
+public class MainSceneController {
+	@FXML
+	private Button buttonItems;
+	@FXML
+	private Button buttonOrders;
+	
+	
+	
+}

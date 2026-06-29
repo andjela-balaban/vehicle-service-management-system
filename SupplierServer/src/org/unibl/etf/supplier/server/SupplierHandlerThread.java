@@ -1,0 +1,151 @@
+package org.unibl.etf.supplier.server;
+
+import org.unibl.etf.supplier.service.*;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.logging.Level;
+
+import org.unibl.etf.model.*;
+import org.unibl.etf.model.OrderStatus;
+import org.unibl.etf.mq.receiver.OrderConsumer;
+
+public class SupplierHandlerThread extends Thread {
+	@SuppressWarnings("unused")
+	private Socket socket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	private ItemService itemService;
+	private OrderService orderService;
+	private SupplierService supplierService;
+	
+	public SupplierHandlerThread(Socket socket) {
+        this.socket = socket;
+        this.itemService = new ItemService();
+        this.orderService = new OrderService();
+        this.supplierService = new SupplierService();
+        try {
+        	this.out = new ObjectOutputStream(socket.getOutputStream());
+        	this.in = new ObjectInputStream(socket.getInputStream());
+        } catch(IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+        }
+    }
+	
+	@Override
+	public void run() {
+		try {
+			String request = (String) in.readObject();
+			try {
+				handleRequest(request, in, out);				
+			}catch(Exception e) {
+				e.printStackTrace();
+				logger.log(Level.WARNING, "Exception: ", e);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+    }
+
+	
+	private void handleRequest(String request, ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
+		switch (request) {
+		case "offer_list": 
+			// Returning the list of items to the central server
+			out.writeObject(itemService.getAllItems());
+			out.flush();
+			break;
+		
+		case "new_order": 
+			// Receiving the serviceman's order, placing it in the repository (and sending it to MQ)
+			Order order = (Order) in.readObject();
+			orderService.addOrder(order);
+			int orderId = order.getId();
+
+			// Returning the order id to the central server
+			out.writeObject(orderId);
+			out.flush();
+			break;
+
+		case "order_status": 
+			// Order id tracking and status return
+			int id = (Integer) in.readObject();
+			OrderStatus status = orderService.getOrderStatus(id);	
+			
+			if(status == OrderStatus.APPROVED) {
+				Receipt receipt = new Receipt(orderService.getOrderById(id));
+				supplierService.processReceipt(receipt);
+			}
+			Order clientOrder = orderService.getOrderById(id);
+			out.writeObject(clientOrder);
+			out.flush();	
+			break;
+			
+		// ----------------------------------------------------------------------------	
+			
+		case "login":
+		    String supplierName = (String) in.readObject();
+		    Supplier sup = supplierService.findByName(supplierName);
+		    if (sup != null) {
+		        out.writeObject("OK");
+		    } else {
+		        out.writeObject("FAIL");
+		    }
+		    out.flush();
+		    break;
+
+		case "items_list":
+		    out.writeObject(itemService.getAllItems());
+		    out.flush();
+		    break;
+
+		case "add_item":
+		    Item newItem = (Item) in.readObject();
+		    Item resultItem = itemService.addItem(newItem);
+		    if(resultItem != null)
+		    	out.writeObject("OK");
+		    else
+		    	out.writeObject("FAIL");
+		    out.flush();
+		    break;
+
+		case "approve_next":
+		    Order nextOrder = null;
+			try {
+				nextOrder = OrderConsumer.getNextOrder();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		    out.writeObject(nextOrder);
+		    out.flush();
+		    break;
+
+		case "approve":
+		    int approveId = (Integer) in.readObject();
+		    orderService.updateOrderStatus(approveId, OrderStatus.APPROVED);
+		    out.writeObject("OK");
+		    out.flush();
+		    break;
+
+		case "reject":
+		    int rejectId = (Integer) in.readObject();
+		    orderService.updateOrderStatus(rejectId, OrderStatus.REJECTED);
+		    out.writeObject("OK");
+		    out.flush();
+		    break;
+  
+		default:
+			System.out.println("Unknown request: " + request);
+			break;
+		}
+	}
+	
+	
+}
+

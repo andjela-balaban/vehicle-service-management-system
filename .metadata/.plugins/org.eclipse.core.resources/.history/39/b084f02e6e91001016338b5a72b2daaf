@@ -1,0 +1,43 @@
+package org.unibl.etf.test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.unibl.etf.model.*;
+import org.unibl.etf.properties.*;
+import org.unibl.etf.service.*;
+
+public class ClientRepositoryServiceTest {
+	private static Path xmlFile;
+
+    @BeforeAll
+    static void setup() {
+//      provjeri da je path iz configa ucitan
+        assertNotNull(ConfigManager.CLINETS_XML_PATH, "CLINETS_XML_PATH ne smije biti null!");
+        xmlFile = Paths.get(ConfigManager.CLINETS_XML_PATH);
+    }
+
+    @Test
+    void testClinetCML() throws IOException, InterruptedException {
+    	 ClinetService service = new ClinetService();
+//       dodavanje klijenta
+         Client c = new Client("Marko", "Markovic", new Vehicle(), "Adresa 123", "065/123-321", "markom@example.com", "mMarko", "pass123", ClientStatus.PENDING);
+         service.add(c);
+//         service.removeClient(c.getUsername());
+//         c.setLastName("Simovic");
+//         service.updateClient(c);
+         
+//       ucitavanje svih linija fajla
+         List<String> lines = Files.readAllLines(xmlFile);
+         
+//       provjera da li se klijent nalazi u xml fajlu
+         boolean contains = lines.stream().anyMatch(line -> line.contains("mMarko"));
+         assertTrue(contains, "XML fajl ne sadrzi testnu poruku!");
+    } 
+}

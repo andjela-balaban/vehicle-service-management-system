@@ -1,0 +1,27 @@
+package application;
+
+import org.unibl.etf.model.Item;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+public class ItemsSceneController {
+	@FXML
+    private TableView<Item> itemsTable;
+    @FXML
+    private TableColumn<Item, String> colCode;
+    @FXML
+    private TableColumn<Item, String> colName;
+    @FXML
+    private TableColumn<Item, Double> colPrice;
+    @FXML
+    private TableColumn<Item, String> colImage;
+    @FXML
+    private Button back;
+    @FXML
+    private Button addButton;
+    
+    
+}

@@ -1,0 +1,93 @@
+package org.unibl.etf.central.server.service;
+
+import static org.unibl.etf.logger.MyLogger.logger;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+
+import org.unibl.etf.central.server.email.EmailSender;
+import org.unibl.etf.model.*;
+import org.unibl.etf.dto.*;
+//import org.unibl.etf.model.VehiclePart;
+import org.unibl.etf.pdf.TxtToPdf;
+import org.unibl.etf.properties.ConfigManager;
+import org.unibl.etf.zip.ZipConvertor;
+
+public class InvoiceService {
+	private static String INVOICE_PATH = ConfigManager.ZIP_PATH;
+	private static String SERVICE_NAME = ConfigManager.SERVICE_NAME;
+	private static double hourlyRate = ConfigManager.HOURLY_RATE;
+	private static int workingHours = ConfigManager.WORKIND_HOURSE;
+	
+	public boolean createInvoice(Invoice invoice) {
+		
+        // Calculating the price of services
+        double partsSum = 0.0;
+        for (PartUsage part : invoice.getParts()) {
+            int quantity = part.getQuantity();
+            double price = part.getVehiclePart().getPrice();
+            partsSum += quantity * price;
+        }
+        
+        double cost = workingHours * hourlyRate;
+        double pdv = (partsSum + cost) * 0.17;
+        double totalCostPDV = partsSum + cost + pdv;
+        
+        invoice.setAmount(totalCostPDV);
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String date = invoice.getAppointment().getDate().format(formatter);  
+        
+        DecimalFormat df = new DecimalFormat("0.00");
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(INVOICE_PATH + File.separator + "faktura_" + invoice.getId() + ".txt"))) {
+            writer.write("Vehicle service \"" + SERVICE_NAME + "\"\n\n");
+            writer.write("INVOICE NO. " + invoice.getId()  + "\n");
+            writer.write("Client: " + invoice.getClient().getFirstName() + " " + invoice.getClient().getLastName()  + " (" 
+            	    + invoice.getClient().getUsername() + ")\n");
+            writer.write("Vehicle: " + invoice.getClient().getVehicle().getModel() + "\n");
+            writer.write("Service: " + invoice.getAppointment().getServiceType() + "\n\n\n\n");
+
+            writer.write("Parts:\n\n");
+            for (PartUsage part : invoice.getParts()) {
+                writer.write("- " + part.getVehiclePart().getCode() + " " + part.getVehiclePart().getName() + " x" + part.getQuantity() + " " + df.format((double) part.getVehiclePart().getPrice()) + "\n");
+            }
+            
+            writer.write("\n\n\nDate: " + date + "\n");
+            writer.write("Work: " + workingHours + "h (" + df.format(hourlyRate) + " €)\n");
+            writer.write("Total Amount (with 17% VAT): " + df.format(totalCostPDV) + " €\n");
+            writer.flush();
+            System.out.println("Invoice successfully created : invoice_" + invoice.getId() + ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Exception: ", e);
+            return false;
+        }
+        return true;
+	}
+	
+	public boolean sendInvoice(Invoice invoice) {
+		String fileNameTxt = INVOICE_PATH + File.separator + "faktura_" + invoice.getId() + ".txt";
+		String fileNamePDF = INVOICE_PATH + File.separator + "faktura_" + invoice.getId() + ".pdf";
+		TxtToPdf.convertToPDF(fileNameTxt, fileNamePDF);
+		String emailTo = invoice.getClient().getEmail();
+		try {
+			String zipFile = ZipConvertor.convertToZip(fileNamePDF);
+			EmailSender.sendEmail(emailTo, zipFile);
+			Files.deleteIfExists(Paths.get(fileNameTxt));
+			Files.deleteIfExists(Paths.get(fileNamePDF));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+			return false;
+		}
+		return true;
+	}
+}

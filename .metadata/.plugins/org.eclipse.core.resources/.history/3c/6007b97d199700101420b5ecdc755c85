@@ -1,0 +1,43 @@
+package org.unibl.etf.supplier.service;
+
+import org.unibl.etf.model.Receipt;
+import org.unibl.etf.model.Supplier;
+import org.unibl.etf.properties.ConfigManager;
+import org.unibl.etf.supplier.repository.SupplierRepository;
+import java.io.*;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import org.unibl.etf.model.Receipt;
+import org.unibl.etf.properties.ConfigManager;
+import org.unibl.etf.accountning.rmi.*;
+
+public class SupplierService {
+
+	private final SupplierRepository supplierRepository;
+	
+	public SupplierService() {
+		supplierRepository = SupplierRepository.getInstance();
+	}
+	
+	public Supplier findByName(String name) {
+		return supplierRepository.getSuppliers().stream()
+				.filter(s -> s.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+	
+	// Metoda za slanje racuna knjigovodstvu
+	// TODO
+	public void processReceipt(Receipt receipt) {
+		try {
+			String name = ConfigManager.ACCOUNTING_RMI;
+			Registry registry = LocateRegistry.getRegistry(1099);
+			AccountingInterface accounting = (AccountingInterface) registry.lookup(name);
+			accounting.serializeReceipt(receipt);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

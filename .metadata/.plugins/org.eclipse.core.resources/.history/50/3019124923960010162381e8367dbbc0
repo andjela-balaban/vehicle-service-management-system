@@ -1,0 +1,19 @@
+package org.unibl.etf.supplier.service;
+
+import org.unibl.etf.model.Supplier;
+import org.unibl.etf.supplier.repository.SupplierRepository;
+
+public class ItemService {
+private final itemRepository itemRepository;
+	
+	public ItemService() {
+		supplierRepository = SupplierRepository.getInstance();
+	}
+	
+	public Supplier findByName(String name) {
+		return supplierRepository.getSuppliers().stream()
+				.filter(s -> s.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+}

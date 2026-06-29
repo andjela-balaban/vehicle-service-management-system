@@ -1,0 +1,27 @@
+package org.unibl.etf.supplier.service;
+
+import java.util.List;
+
+import org.unibl.etf.model.*;
+import org.unibl.etf.supplier.repository.*;
+
+public class ItemService {
+private final ItemRepository itemRepository;
+	
+	public ItemService() {
+		itemRepository = ItemRepository.getInstance();
+	}
+	
+	public List<Item> getAllItems(){
+		return itemRepository.getItems();
+	}
+	
+	public Item getItemByCode(String code) {
+		Item item = null;
+		for(int i = 0; i < itemRepository.getItems().size(); i++) {
+			if(itemRepository.getItems().get(i).getCode().equals(code))
+				item = itemRepository.getItems().get(i);
+		}
+		return item;
+	}
+}

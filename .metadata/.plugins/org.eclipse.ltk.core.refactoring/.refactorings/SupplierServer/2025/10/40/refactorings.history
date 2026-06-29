@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;org.unibl.etf.supplier.server.SupplierServerStart&apos; to &apos;Supplier1ServerStart&apos;&#x0A;- Original project: &apos;SupplierServer&apos;&#x0A;- Original element: &apos;org.unibl.etf.supplier.server.SupplierServerStart&apos;&#x0A;- Renamed element: &apos;org.unibl.etf.supplier.server.Supplier1ServerStart&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;SupplierServerStart&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;org.unibl.etf.supplier.server{SupplierServerStart.java[SupplierServerStart" matchStrategy="1" name="Supplier1ServerStart" qualified="false" references="true" similarDeclarations="false" stamp="1759408987992" textual="false" version="1.0"/>
+</session>

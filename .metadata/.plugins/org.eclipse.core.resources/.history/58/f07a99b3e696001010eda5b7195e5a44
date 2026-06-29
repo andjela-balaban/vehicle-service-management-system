@@ -1,0 +1,30 @@
+package org.unibl.etf.supplier.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.unibl.etf.model.*;
+
+public class OrderRepository {
+	private List<Order> orders = new ArrayList<>();
+	private static OrderRepository instance = null;
+	
+	private OrderRepository() {
+		super();
+	}
+	
+	//TODO - ucitavanje artikala pomocu parsera
+	private static void loadItems() {
+		
+	}
+	
+	public static OrderRepository getInstance() {
+		 if(instance == null) 
+			 instance = new ItemRepository();
+		 return instance; 
+	}
+	
+	public List<Order> getOrders(){
+		return orders;
+	}
+}

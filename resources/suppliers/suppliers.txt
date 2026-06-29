@@ -1,0 +1,2 @@
+supplier1#localhost#9001
+supplier2#localhost#9002

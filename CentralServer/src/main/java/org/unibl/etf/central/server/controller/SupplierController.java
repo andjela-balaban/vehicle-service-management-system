@@ -1,0 +1,126 @@
+package org.unibl.etf.central.server.controller;
+
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import org.unibl.etf.central.server.dto.*;
+import org.unibl.etf.central.server.service.*;
+import org.unibl.etf.model.*;
+import org.unibl.etf.dto.*;
+
+@Path("suppliers")
+public class SupplierController {
+	private SupplierService service;
+	private OrderRequestService orderService;
+	
+	public SupplierController() {
+		this.service = new SupplierService();
+		this.orderService = new OrderRequestService();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllSuppliers() {
+		List<Supplier> suppliers = service.getAllSuplliers();
+		return Response.status(200).entity(suppliers).build();
+	}
+	
+	@GET
+	@Path("/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSupplierByName(@PathParam("name") String name) {
+		Supplier supplier = service.findByName(name);
+		if(supplier != null) {
+			return Response.status(200).entity(supplier).build();			
+		}
+		return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();
+	}
+	
+	@GET
+	@Path("/{name}/items")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSupplierItems(@PathParam("name") String name) {
+		if(service.findByName(name) != null) {
+			List<Item> items = service.getSuplierItems(name);
+			return Response.status(200).entity(items).build();			
+		}
+		return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();	
+	}
+	
+	@GET
+	@Path("/{name}/items/{code}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getItemFromSupplier(@PathParam("name") String name, @PathParam("code") String code) {
+		if(service.findByName(name) != null) {
+			List<Item> items = service.getSuplierItems(name);
+			if(items != null) {
+				for(Item item : items) {
+					if(item.getCode().equals(code))
+						return Response.status(200).entity(item).build();
+				}		
+			}
+			return Response.status(404).entity(new ErrorMessage("Item not found")).build();
+		}
+		else {
+			return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();
+		}
+	}	
+	
+	@GET
+	@Path("{name}/orders")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOrders(@PathParam("name") String name) {
+		if(service.findByName(name) != null) {
+			Supplier supplier = service.findByName(name);
+			List<OrderRequestDTO> orders = orderService.getAllOrders().stream().filter(o -> o.getSupplier().equals(supplier)).toList();
+			if(orders != null) {
+				return Response.status(200).entity(orders).build();
+			}
+			return Response.status(404).entity(new ErrorMessage("Orders not found")).build();
+		}
+		return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();
+	}
+	
+	@GET
+	@Path("{name}/orders/{orderID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOrder(@PathParam("name") String name, @PathParam("orderID") int orderID) {
+		if(service.findByName(name) != null) {
+			Order order = service.getOrder(name, orderID);
+			if(order != null) {
+				return Response.status(200).entity(order).build();
+			}
+			return Response.status(404).entity(new ErrorMessage("Order not found")).build();
+		}
+		return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();
+	}
+	
+	@POST
+	@Path("{name}/send/{quantity}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response sendOrder(@PathParam("name") String name, @PathParam("quantity") int quantity, Item item) {
+		Supplier supplier = service.findByName(name);
+		if(supplier != null) {
+			if(item != null) {
+				int result = service.sendOrder(name, item, quantity);
+				if(result != -1) {
+					return Response.status(200).entity(result).build();
+				}
+				else
+					return Response.status(500).entity(new ErrorMessage("Unable to send order")).build();
+			}
+			return Response.status(404).entity(new ErrorMessage("Item not found")).build();
+		}
+		return Response.status(404).entity(new ErrorMessage("Supplier not found")).build();
+	}
+	
+	
+}

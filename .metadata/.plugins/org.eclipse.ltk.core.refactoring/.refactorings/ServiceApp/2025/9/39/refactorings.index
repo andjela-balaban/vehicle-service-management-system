@@ -1,0 +1,11 @@
+1758648601338	Delete element
+1758651384175	Rename package 'org.unibl.etf.client.rest'
+1758651646571	Rename type 'ChatClientRESTController'
+1758652803140	Delete element
+1758654303418	Rename method 'getClients'
+1758699052714	Rename field 'apointmentsTable'
+1758714064363	Rename resource 'InvoicePartDialog.fxml'
+1758745235165	Rename type 'SupplierSceneController'
+1758745268171	Delete element
+1758745274862	Rename type 'ChooseSupplierSceneController'
+1758747930298	Rename type 'SupplierSceneController'

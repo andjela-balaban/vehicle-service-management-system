@@ -1,0 +1,91 @@
+.custom-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #c1c1c1;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #2a2a2a;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* hover */
+.custom-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #edbe47;
+}
+
+/* pressed */
+.custom-button:pressed {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #edbe47;
+    -fx-text-fill: black;
+}
+
+.continue-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #edbe47;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #2a2a2a;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* hover */
+.back-button:hover {
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.0, 0, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #edbe47;
+}
+
+/* pressed */
+.back-button:pressed {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #edbe47;
+    -fx-text-fill: black;
+}
+
+#confirmButton:hover {
+    -fx-background-color: #edbe47;
+    -fx-text-fill: white;
+}
+
+#sendButton:hover {
+    -fx-background-color: #edbe47;
+    -fx-text-fill: white;
+}
+
+.reject-button, .approve-button {
+    -fx-background-color: transparent;   /* ista kao pozadina */
+    -fx-border-color: #c1c1c1;           /* siva ivica */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #5e5e5e;              /* sivi tekst u normalnom stanju */
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* ODVAJANJE PO TIPU */
+.reject-button:hover, .reject-button:pressed {
+    -fx-background-color: #E53935;       /* crvena */
+    -fx-text-fill: white;                /* tekst postaje bijel */
+    -fx-border-color: #E53935;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.0, 0, 3);
+}
+
+.approve-button:hover, .approve-button:pressed {
+    -fx-background-color: #44aa49;       /* zelena */
+    -fx-text-fill: white;                /* tekst postaje bijel */
+    -fx-border-color: #44aa49;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.0, 0, 3);
+}

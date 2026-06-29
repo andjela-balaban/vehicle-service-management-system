@@ -1,0 +1,89 @@
+package application;
+
+import java.io.IOException;
+import org.unibl.etf.supplierapp.server.SupplierClient;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.event.ActionEvent;
+import org.unibl.etf.model.Supplier;
+import org.unibl.etf.supplierapp.server.SupplierClient;
+
+public class LoginSceneController {
+
+    @FXML
+    private TextField supplierNameField;
+	@FXML
+	private Button button;
+
+    private SupplierClient client;
+
+    @FXML
+    private void loginHandler(ActionEvent event) {
+        String supplierName = supplierNameField.getText().trim();
+
+        if (supplierName.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Upozorenje", "Morate unijeti naziv dobavljača.");
+            return;
+        }
+
+        try {
+            client = new SupplierClient(supplierName);
+
+            if (client.getSupplier() == null) {
+                showAlert(Alert.AlertType.ERROR, "Greška", "Dobavljač sa ovim imenom ne postoji.");
+                return;
+            }
+
+            boolean loggedIn = client.login(supplierName);
+
+            if (loggedIn) {
+            	switchToMainScene();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Greška", "Prijava nije uspjela.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Greška", "Neuspjela konekcija sa serverom: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    
+    private void switchToMainScene() {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("SceneMain.fxml"));
+    	Parent root;
+		try {
+			root = loader.load();
+			Stage stage = (Stage) button.getScene().getWindow();
+	    	Scene scene = new Scene(root);
+	    	stage.setScene(scene);
+	    	stage.setTitle("Main screen");
+	    	stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public SupplierClient getClient() {
+        return client;
+    }
+}
+

@@ -1,0 +1,189 @@
+package org.unibl.etf.properties;
+
+import java.io.*;
+import java.util.*;
+import java.util.logging.Level;
+import static org.unibl.etf.logger.MyLogger.logger;
+//
+//public class ConfigManager {
+//
+//	private ConfigManager() {
+//		super();
+//	}
+//	
+//	static {
+//		try {
+//			FileReader reader = new FileReader(Util.buildPath("../resources/config.properties")); 
+//			Properties p = new Properties(); 
+//			p.load(reader);
+//			
+//			LOGGER_PATH = Util.buildPath(p.getProperty("LOGGER_PATH"));
+//			CLIENTS_XML_PATH = Util.buildPath(p.getProperty("CLINETS_XML_PATH"));
+//			APPOINTMENTS_XML_PATH = Util.buildPath(p.getProperty("APPOINTMENTS_XML_PATH"));
+//			
+//		} catch(IOException e) {
+//			e.printStackTrace();
+//			logger.log(Level.WARNING, "Exception: ", e);
+//		}
+//		
+//	}
+//	
+//	public static String LOGGER_PATH;
+//	
+//	public static String CLIENTS_XML_PATH;
+//	
+//	public static String APPOINTMENTS_XML_PATH;
+//
+//}
+
+
+
+
+//LOGGER_PATH=../resources/logs/logger.log
+//CLIENTS_XML_PATH=../resources/clinets/clinets.xml
+//APPOINTMENTS_XML_PATH=../resources/appointments/appointments.xml
+
+//LOGGER_PATH=/Users/andjelabalaban/eclipse-workspace4/resources/logs/logger.log
+//CLIENTS_XML_PATH=/Users/andjelabalaban/eclipse-workspace4/resources/clinets/clinets.xml
+//APPOINTMENTS_XML_PATH=/Users/andjelabalaban/eclipse-workspace4/resources/appointments/appointments.xml
+
+public class ConfigManager {
+
+	private ConfigManager() {
+		super();
+	}
+	
+	static {
+		try {
+//			FileReader reader = new FileReader(Util.buildPath("../resources/config.properties"));
+			System.out.println("POZVAN");
+			FileReader reader = new FileReader(new File("/Users/andjelabalaban/eclipse-workspace4/resources/config.properties"));
+			System.out.println(new File("/Users/andjelabalaban/eclipse-workspace4/resources/config.properties").exists());
+			Properties p = new Properties(); 
+			p.load(reader);
+			System.out.println("UCITANO");
+			
+			LOGGER_PATH = Util.buildPath(p.getProperty("LOGGER_PATH"));
+			CLIENTS_XML_PATH = Util.buildPath(p.getProperty("CLIENTS_XML_PATH"));
+			APPOINTMENTS_XML_PATH = Util.buildPath(p.getProperty("APPOINTMENTS_XML_PATH"));
+			KEY_STORE_PATH = Util.buildPath(p.getProperty("KEY_STORE_PATH"));
+			KEY_STORE_PASSWORD =  p.getProperty("KEY_STORE_PASSWORD");
+			CHAT_PORT = Integer.parseInt(p.getProperty("CHAT_PORT"));
+			CHAT_HOST = p.getProperty("CHAT_HOST");
+			REDIS_PORT = Integer.parseInt(p.getProperty("REDIS_PORT"));
+			REDIS_HOST = p.getProperty("REDIS_HOST");
+			SUPPLIERS_PATH = Util.buildPath(p.getProperty("SUPPLIERS_PATH"));
+			EMAIL_FROM = p.getProperty("EMAIL_FROM");
+			APP_PASSWORD = p.getProperty("APP_PASSWORD");
+			ZIP_PATH = Util.buildPath(p.getProperty("ZIP_PATH"));
+			SERVICE_NAME =  p.getProperty("SERVICE_NAME");
+			WORKIND_HOURSE = Integer.parseInt(p.getProperty("WORKIND_HOURSE"));
+			HOURLY_RATE = Double.parseDouble(p.getProperty("HOURLY_RATE"));
+			MQ_HOST = p.getProperty("MQ_HOST");
+			MQ_USERNAME = p.getProperty("MQ_USERNAME");
+			MQ_PASSWORD = p.getProperty("MQ_PASSWORD");
+			QUEUE_NAME = p.getProperty("QUEUE_NAME");
+			RECEIPTS_PATH = Util.buildPath(p.getProperty("RECEIPTS_PATH"));
+			LINKS_PATH = Util.buildPath(p.getProperty("LINKS_PATH"));
+			ACCOUNTING_RMI = p.getProperty("ACCOUNTING_RMI");
+			ALT_PATH = Util.buildPath(p.getProperty("ALT_PATH"));
+			UPDATE_LINK_PATH = Util.buildPath(p.getProperty("UPDATE_LINK_PATH"));
+			UPDATE_ALT_PATH = Util.buildPath(p.getProperty("UPDATE_ALT_PATH"));
+			APPOINTMENTS_HISTORY_URL = p.getProperty("APPOINTMENTS_HISTORY_URL");
+			LOGIN_URL = p.getProperty("LOGIN_URL");
+			CLIENTS_URL = p.getProperty("CLIENTS_URL");
+			BOOK_APPOINTMENT_URL = p.getProperty("BOOK_APPOINTMENT_URL");
+			APPROVE_ACCOUNT_URL = p.getProperty("APPROVE_ACCOUNT_URL");
+			BLOCK_ACCOUNT_URL = p.getProperty("BLOCK_ACCOUNT_URL");
+		} catch(IOException e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "Exception: ", e);
+		}
+		
+	}
+	
+//	static {
+//	    try (InputStream input = ConfigManager.class.getClassLoader().getResourceAsStream("config.properties")) {
+//	        if (input == null) {
+//	            throw new RuntimeException("config.properties nije pronađen u classpath-u!");
+//	        }
+//
+//	        Properties p = new Properties();
+//	        p.load(input);
+//
+//	        LOGGER_PATH = p.getProperty("LOGGER_PATH");
+//	        CLIENTS_XML_PATH = p.getProperty("CLIENTS_XML_PATH");
+//	        APPOINTMENTS_XML_PATH = p.getProperty("APPOINTMENTS_XML_PATH");
+//
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	        // ako koristiš logger, možeš ovdje logovati
+//	    }
+//	}
+
+	
+	public static String LOGGER_PATH;
+	
+	public static String CLIENTS_XML_PATH;
+	
+	public static String APPOINTMENTS_XML_PATH;
+	
+	public static String KEY_STORE_PATH;
+	
+	public static String KEY_STORE_PASSWORD;
+
+	public static int CHAT_PORT;
+	
+	public static String CHAT_HOST;
+	
+	public static int REDIS_PORT;
+	
+	public static String REDIS_HOST;
+	
+	public static String SUPPLIERS_PATH;
+	
+	public static String EMAIL_FROM;
+	
+	public static String APP_PASSWORD;
+	
+	public static String ZIP_PATH;
+	
+	public static String SERVICE_NAME;
+	
+	public static int WORKIND_HOURSE;
+	
+	public static double HOURLY_RATE;
+	
+	public static String MQ_HOST;
+	
+	public static String MQ_USERNAME;
+	
+	public static String MQ_PASSWORD;
+	
+	public static String QUEUE_NAME;
+	
+	public static String RECEIPTS_PATH;
+	
+	public static String LINKS_PATH;
+	
+	public static String ACCOUNTING_RMI;
+	
+	public static String ALT_PATH;
+	
+	public static String UPDATE_LINK_PATH;
+	
+	public static String UPDATE_ALT_PATH;
+	
+	public static String APPOINTMENTS_HISTORY_URL;
+	
+	public static String LOGIN_URL;
+	
+	public static String CLIENTS_URL;
+	
+	public static String BOOK_APPOINTMENT_URL;
+	
+	public static String APPROVE_ACCOUNT_URL;
+	
+	public static String BLOCK_ACCOUNT_URL;
+	
+}

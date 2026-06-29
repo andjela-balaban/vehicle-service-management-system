@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="340.0" stylesheets="@../../../resources/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CreateOrderDialogController">
+   <children>
+      <Label layoutX="34.0" layoutY="33.0" text="Quantity" textFill="#5e5e5e">
+         <font>
+            <Font name="Helvetica Bold" size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="orderButton" layoutX="175.0" layoutY="119.0" prefHeight="35.0" prefWidth="110.0" styleClass="custom-button" text="Order">
+         <font>
+            <Font name="Helvetica Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="cancelButton" layoutX="53.0" layoutY="119.0" prefHeight="35.0" prefWidth="110.0" styleClass="custom-button" text="Cancel">
+         <font>
+            <Font name="Helvetica Bold" size="16.0" />
+         </font>
+      </Button>
+      <TextField fx:id="quantityField" layoutX="34.0" layoutY="58.0" prefHeight="30.0" prefWidth="270.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="550" prefWidth="800" stylesheets="@../../../resources/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ChatSceneController">
+	<Label layoutX="20.0" layoutY="80.0" text="Users" textFill="#565656">
+      <font>
+         <Font name="Helvetica Bold" size="13.0" />
+      </font></Label>
+	<ListView fx:id="usersListView" layoutX="20.0" layoutY="100.0" prefHeight="122.0" prefWidth="150" />
+	<ListView fx:id="groupsListView" layoutX="20.0" layoutY="260.0" prefHeight="48.0" prefWidth="150" />
+	<ListView fx:id="chatMessagesListView" layoutX="200" layoutY="20" prefHeight="450" prefWidth="580" />
+	<TextField fx:id="messageField" layoutX="200" layoutY="480" prefHeight="30" prefWidth="480" promptText="Unesi poruku..." />
+	<Button fx:id="sendButton" layoutX="690" layoutY="480" onAction="#handleSend" prefHeight="30" prefWidth="90" styleClass="custom-button" text="Send">
+		<font>
+            <Font name="Helvetica Bold" size="14.0" />
+   		</font>
+    </Button>
+	<Button fx:id="back" layoutX="20.0" layoutY="15.0" mnemonicParsing="false" onAction="#switchToMainScene" prefHeight="40.0" prefWidth="40.0" styleClass="back-button" />
+	<ImageView fitHeight="18.0" fitWidth="18.0" layoutX="31.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+		<image>
+			<Image url="@../../../resources/gui_images/left-arrow.png" />
+		</image>
+	</ImageView>
+	<ImageView fitHeight="182.0" fitWidth="176.0" layoutX="13.0" layoutY="334.0" pickOnBounds="true" preserveRatio="true">
+		<image>
+			<Image url="@../../../resources/gui_images/peopleChat.png" />
+		</image>
+	</ImageView>
+   <Label layoutX="20.0" layoutY="240.0" text="Groups" textFill="#565656">
+      <font>
+         <Font name="Helvetica Bold" size="13.0" />
+      </font>
+   </Label>
+</AnchorPane>
