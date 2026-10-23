@@ -1,3 +1,0 @@
-#Tomcat publish data
-#Thu Oct 02 15:56:03 CEST 2025
-org.eclipse.jst.j2ee.server\:SharedModule=WEB-INF/lib/SharedModule.jar

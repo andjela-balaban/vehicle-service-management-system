@@ -1,9 +1,0 @@
-package org.unibl.etf.chat.server;
-
-public class ChatServerStart {
-    public static void main(String[] args) throws Exception {
-        ChatServer server = ChatServer.getInstance();
-        server.start();
-        System.out.println("Server pokrenut.");
-    }
-}
